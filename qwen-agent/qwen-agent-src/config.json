@@ -1,0 +1,16 @@
+{
+  "tools": [
+    {
+      "name": "searxng",
+      "type": "web_search",
+      "endpoint": "http://localhost:8080/search",
+      "params": {
+        "format": "json"
+      }
+    }
+  ],
+  "agent": {
+    "model": "qwen",
+    "interface": "gradio"
+  }
+}

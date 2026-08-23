@@ -1,0 +1,59 @@
+{
+    "name": "qwen-local-agent",
+    "displayName": "Qwen Local Agent",
+    "description": "Local Qwen3:14B project agent for VS Code Chat",
+    "version": "0.1.2",
+    "publisher": "local",
+    "license": "UNLICENSED",
+    "engines": {
+        "vscode": "^1.93.0"
+    },
+    "categories": [
+        "Chat"
+    ],
+    "main": "./extension.bundle.js",
+    "activationEvents": [
+        "onChatParticipant:local.qwen"
+    ],
+    "contributes": {
+        "configuration": {
+            "title": "Qwen Local Agent",
+            "properties": {
+                "qwenLocalAgent.rootPath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Путь к каталогу qwen-agent с подпапкой qwen-agent-src. Не зависит от открытой папки VS Code."
+                },
+                "qwenLocalAgent.pythonPath": {
+                    "type": "string",
+                    "default": "python",
+                    "description": "Команда или абсолютный путь к системному Python."
+                }
+            }
+        },
+        "chatParticipants": [
+            {
+                "id": "local.qwen",
+                "name": "qwen",
+                "fullName": "Qwen Local Agent",
+                "description": "Локальный Qwen3:14B агент для работы с проектами",
+                "isSticky": true
+            }
+        ]
+    },
+    "scripts": {
+        "bundle": "esbuild extension.js --bundle --platform=node --external:vscode --outfile=extension.bundle.js",
+        "check": "node --check extension.js"
+    },
+    "devDependencies": {
+        "@vscode/vsce": "^3.9.2",
+        "esbuild": "^0.25.0"
+    },
+    "files": [
+        "extension.bundle.js",
+        "package.json",
+        "qwen.svg",
+        "README.md",
+        "LICENSE"
+    ]
+}

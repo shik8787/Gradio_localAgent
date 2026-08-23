@@ -1,0 +1,4 @@
+-e ./qwen-agent/qwen-agent-src[mcp,gui,python_executor]
+numpy
+soundfile
+tqdm

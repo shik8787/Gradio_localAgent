@@ -1,0 +1,12 @@
+{
+    "servers": {
+        "qwen-local-agent": {
+            "type": "stdio",
+            "command": "python",
+            "args": [
+                "${workspaceFolder}\\qwen-agent\\qwen-agent-src\\qwen_mcp_server.py"
+            ],
+            "cwd": "${workspaceFolder}\\qwen-agent\\qwen-agent-src"
+        }
+    }
+}
