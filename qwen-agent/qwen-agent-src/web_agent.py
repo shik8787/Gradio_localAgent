@@ -1,7 +1,10 @@
-﻿from html.parser import HTMLParser
+import os
+from html.parser import HTMLParser
+from pathlib import Path
 from typing import Dict, List, Union
 
 import requests
+from dotenv import load_dotenv
 from qwen_agent.agents.memo_assistant import MemoAssistant
 from qwen_agent.gui import WebUI
 from qwen_agent.tools.base import BaseTool, register_tool
@@ -9,7 +12,9 @@ from qwen_agent.tools.simple_doc_parser import SimpleDocParser
 import terminal_tool
 
 
-SEARXNG_URL = "http://localhost:8080"
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+
+SEARXNG_URL = os.environ.get("SEARXNG_URL", "http://localhost:8080").rstrip("/")
 
 
 class _SearXNGResultParser(HTMLParser):
@@ -150,10 +155,14 @@ class DeepWebSearch(BaseTool):
         return "\n\n".join(pages)
 
 llm_cfg = {
-    "model": "qwen3:14b",
+    "model": os.environ.get("OLLAMA_MODEL", "qwen3:14b"),
     "model_type": "oai",
-    "model_server": "http://localhost:11434/v1",
+    "model_server": os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
     "api_key": "ollama",
+    "generate_cfg": {
+        "use_raw_api": True,
+        "max_input_tokens": int(os.environ.get("OLLAMA_MAX_INPUT_TOKENS", "24576")),
+    },
 }
 
 system_message = (
@@ -172,7 +181,7 @@ def create_agent():
         function_list=["terminal", "searxng", "deep_web_search"],
         system_message=system_message,
         name="Локальный Qwen Agent",
-        description="Локальный агент на Qwen3:14B",
+        description=f"Локальный агент на {llm_cfg['model']}",
     )
 
 

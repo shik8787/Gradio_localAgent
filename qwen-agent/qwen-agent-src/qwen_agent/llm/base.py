@@ -411,9 +411,27 @@ class BaseChatModel(ABC):
         stream: bool = True,
         generate_cfg: Optional[Dict] = None,
     ) -> Union[List[Message], List[Dict], Iterator[List[Message]], Iterator[List[Dict]]]:
-        if functions and functions[0].get('type') != 'function':
-            functions = [{'type': 'function', 'function': f} for f in functions]
         if functions:
+            functions = copy.deepcopy(functions)
+            if functions[0].get('type') != 'function':
+                functions = [{'type': 'function', 'function': f} for f in functions]
+            for tool in functions:
+                function = tool['function']
+                parameters = function.get('parameters')
+                if isinstance(parameters, list):
+                    function['parameters'] = {
+                        'type': 'object',
+                        'properties': {
+                            parameter['name']: {
+                                key: value for key, value in parameter.items()
+                                if key not in ('name', 'required')
+                            }
+                            for parameter in parameters
+                        },
+                        'required': [
+                            parameter['name'] for parameter in parameters if parameter.get('required', False)
+                        ],
+                    }
             generate_cfg['tools'] = functions
         if stream:
             return self._chat_stream(messages=messages, delta_stream=False, generate_cfg=generate_cfg)

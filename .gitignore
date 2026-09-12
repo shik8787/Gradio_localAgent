@@ -8,4 +8,7 @@ node_modules/
 *.vsix
 build/
 dist/
+.venv/
+logs/
+qwen-agent/qwen-agent-src/workspace/
 qwen-agent/workspace/download/
